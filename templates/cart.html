@@ -1,0 +1,95 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shopping Cart - Khat Seva</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+
+<header class="navbar">
+    <h2>🌱 Khat Seva</h2>
+    <nav>
+        <a href="/">Home</a>
+        <a href="/seeds">Seeds</a>
+        <a href="/fertilizers">Fertilizers</a>
+        <a href="/cart">My Cart</a>
+        <a href="/logout">Logout</a>
+    </nav>
+</header>
+
+<section class="services">
+    <h2>🛒 My Shopping Cart</h2>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% for category, message in messages %}
+            <p class="message {{ category }}">{{ message }}</p>
+        {% endfor %}
+    {% endwith %}
+
+    {% if items %}
+        <div class="service-container">
+            {% for item in items %}
+                <div class="service-card">
+                    <h3>{{ item.name }}</h3>
+                    <p>Price: ₹{{ item.price }}</p>
+                    <p>Subtotal: ₹{{ item.subtotal }}</p>
+
+                    <form action="/update_cart/{{ item.id }}"
+                          method="POST">
+                        <label for="quantity-{{ item.id }}">
+                            Quantity
+                        </label>
+                        <input
+                            type="number"
+                            id="quantity-{{ item.id }}"
+                            name="quantity"
+                            value="{{ item.quantity }}"
+                            min="1"
+                            max="100"
+                            required>
+
+                        <button type="submit" class="btn">
+                            Update Quantity
+                        </button>
+                    </form>
+
+                    <form action="/remove_from_cart/{{ item.id }}"
+                          method="POST">
+                        <button type="submit" class="btn">
+                            Remove Product
+                        </button>
+                    </form>
+                </div>
+            {% endfor %}
+        </div>
+
+        <h2 style="margin:25px 0;">
+            Total Amount: ₹{{ total }}
+        </h2>
+
+        
+<form action="/place_order" method="POST">
+    <button type="submit" class="btn">
+        ✅ Place Order
+    </button>
+</form>
+
+
+    {% else %}
+        <p>Your cart is empty.</p>
+        <p style="margin-top:20px;">
+            <a href="/seeds" class="btn">Shop Seeds</a>
+            <a href="/fertilizers" class="btn">Shop Fertilizers</a>
+        </p>
+    {% endif %}
+</section>
+
+<footer>
+    <p>© 2026 Khat Seva</p>
+</footer>
+
+</body>
+</html>

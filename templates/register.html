@@ -1,0 +1,76 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Farmer Registration - Khat Seva</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+
+<header class="navbar">
+    <h2>🌱 Khat Seva</h2>
+    <nav>
+        <a href="/">Home</a>
+        <a href="/register">Register</a>
+        <a href="/login">Login</a>
+    </nav>
+</header>
+
+<div class="form-container">
+    <h1>Farmer Registration</h1>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% for category, message in messages %}
+            <div class="message {{ category }}">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endwith %}
+
+    <form action="{{ url_for('register') }}" method="POST">
+
+        <input type="text" name="name"
+               placeholder="Full Name" required>
+
+        <input type="tel" name="mobile"
+               placeholder="Mobile Number"
+               pattern="[0-9]{10}" maxlength="10" required>
+
+        <input type="email" name="email"
+               placeholder="Email Address" required>
+
+        <input type="text" name="address"
+               placeholder="Address" required>
+
+        <input type="text" name="village"
+               placeholder="Village" required>
+
+        <input type="text" name="district"
+               placeholder="District" required>
+
+        <input type="text" name="land_details"
+               placeholder="Land Details" required>
+
+        <input type="password" name="password"
+               placeholder="Password (minimum 8 characters)"
+               minlength="8" required>
+
+        <button type="submit">Register</button>
+
+    </form>
+
+    <p style="text-align:center; margin-top:20px;">
+        Already registered?
+        <a href="{{ url_for('login') }}">Login here</a>
+    </p>
+</div>
+
+<footer>
+    <p>© 2026 Khat Seva | Farmer Service Web Application</p>
+</footer>
+
+</body>
+</html>
+```

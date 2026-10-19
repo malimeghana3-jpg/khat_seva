@@ -1,0 +1,61 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fertilizers - Khat Seva</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+
+<header class="navbar">
+    <h2>🌱 Khat Seva</h2>
+    <nav>
+        <a href="/">Home</a>
+        <a href="/seeds">Seeds</a>
+        <a href="/fertilizers">Fertilizers</a>
+        <a href="/register">Register</a>
+        <a href="/login">Login</a>
+    </nav>
+</header>
+
+<section class="services">
+    <h2>🌿 Available Fertilizers</h2>
+
+    <div class="service-container">
+        {% for product in products %}
+        <div class="service-card">
+            <h3>{{ product.name }}</h3>
+            <p>{{ product.description }}</p>
+            <p><strong>Price: ₹{{ product.price }}</strong></p>
+            <p>Stock: {{ product.availability }}</p>
+            
+{% set fertilizer_ids = [4, 5, 6] %}
+{% for product in products %}
+    <div class="service-card">
+        <h3>{{ product.name }}</h3>
+        <p>{{ product.description }}</p>
+        <p><strong>Price: ₹{{ product.price }}</strong></p>
+        <p>{{ product.availability }}</p>
+
+        <form action="/add_to_cart/{{ fertilizer_ids[loop.index0] }}"
+              method="POST">
+            <button type="submit" class="btn">
+                🛒 Add to Cart
+            </button>
+        </form>
+    </div>
+{% endfor %}
+
+        </div>
+        {% endfor %}
+    </div>
+</section>
+
+<footer>
+    <p>© 2026 Khat Seva</p>
+</footer>
+
+</body>
+</html>

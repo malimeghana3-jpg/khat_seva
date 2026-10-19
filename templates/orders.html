@@ -1,0 +1,174 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Orders - Khat Seva</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: Arial, sans-serif;
+            background: #f0f7ed;
+            color: #26352a;
+        }
+
+        h1 {
+            text-align: center;
+            color: #267333;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 25px auto;
+        }
+
+        .order-card {
+            background: white;
+            padding: 22px;
+            margin-bottom: 25px;
+            border-radius: 12px;
+            box-shadow: 0 3px 12px #00000015;
+            overflow-x: auto;
+        }
+
+        h2, h3 {
+            color: #267333;
+        }
+
+        .farmer-info p {
+            margin: 8px 0;
+            overflow-wrap: anywhere;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+            min-width: 450px;
+        }
+
+        th, td {
+            padding: 12px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+
+        th {
+            background: #267333;
+            color: white;
+        }
+
+        .total {
+            text-align: right;
+            color: #267333;
+            font-size: 20px;
+            font-weight: bold;
+            margin-top: 18px;
+        }
+
+        .back-btn {
+            display: inline-block;
+            background: #267333;
+            color: white;
+            text-decoration: none;
+            padding: 11px 18px;
+            border-radius: 6px;
+        }
+
+        .empty {
+            text-align: center;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>🌾 Khat Seva - My Orders</h1>
+
+    <div class="container">
+
+       <a href="/" class="back-btn">
+            ← Back to Home
+        </a>
+
+        <br><br>
+
+        {% if order_details %}
+
+            {% for details in order_details %}
+
+                {% set order = details.order %}
+
+                <div class="order-card">
+
+                    <h2>Order #{{ order.order_id }}</h2>
+
+                    <div class="farmer-info">
+                        <h3>Farmer Details</h3>
+
+                        <p><b>Name:</b> {{ order.farmer_name }}</p>
+                        <p><b>Email:</b> {{ order.farmer_email }}</p>
+                        <p><b>Mobile:</b> {{ order.farmer_mobile }}</p>
+                        <p><b>Village:</b> {{ order.farmer_village }}</p>
+                        <p><b>District:</b> {{ order.farmer_district }}</p>
+                        <p><b>Order Date:</b> {{ order.created_at }}</p>
+                    </div>
+
+                    <h3>Ordered Products</h3>
+
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Product Name</th>
+                                <th>Quantity</th>
+                                <th>Price</th>
+                                <th>Subtotal</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            {% for item in details["items"] %}
+                                <tr>
+                                    <td>{{ item.product_name }}</td>
+                                    <td>{{ item.quantity }}</td>
+                                    <td>₹{{ "%.2f"|format(item.price|float) }}</td>
+                                    <td>₹{{ "%.2f"|format(item.subtotal|float) }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+
+                    <div class="total">
+                        Total: ₹{{ "%.2f"|format(order.total|float) }}
+                    </div>
+
+                </div>
+
+            {% endfor %}
+
+        {% else %}
+
+            <div class="empty">
+                <h2>No Orders Yet!</h2>
+                <p>Order seeds or fertilizers to see your order details here.</p>
+                <a href="{{ url_for('seeds') }}" class="back-btn">
+                    Shop Seeds
+                </a>
+            </div>
+
+        {% endif %}
+
+    </div>
+
+</body>
+</html>
