@@ -1,25 +1,33 @@
+import os
+import sqlite3
+from pathlib import Path
 
 from flask import (
     Flask, render_template, request, redirect,
     url_for, session, flash
 )
-import sqlite3
-from pathlib import Path
 from werkzeug.security import generate_password_hash, check_password_hash
 
 
 # ---------------- APP CONFIGURATION ----------------
 
+BASE_DIR = Path(__file__).resolve().parent
+
+# static_folder="static" + static_url_path="" means /style.css is served
+# from the "static" folder. This keeps app.py and khat_seva.db private.
 app = Flask(
     __name__,
     template_folder="templates",
-    static_folder=".",
+    static_folder="static",
     static_url_path=""
 )
 
-app.secret_key = "khat-seva-change-this-secret-key"
+# On Render, set SECRET_KEY in Environment settings (any long random text).
+app.secret_key = os.environ.get(
+    "SECRET_KEY",
+    "khat-seva-change-this-secret-key"
+)
 
-BASE_DIR = Path(__file__).resolve().parent
 DB_PATH = BASE_DIR / "khat_seva.db"
 
 
@@ -95,6 +103,12 @@ def create_tables():
                 FOREIGN KEY (order_id) REFERENCES orders(id)
             )
         """)
+
+
+# IMPORTANT: run at import time so it also works under gunicorn (Render).
+# Before, this was only inside `if __name__ == "__main__":`, which gunicorn
+# never runs, so the tables were never created on Render.
+create_tables()
 
 
 # ---------------- HOME PAGE ----------------
@@ -467,7 +481,6 @@ def place_order():
 
 # ---------------- ORDER HISTORY ----------------
 
-
 @app.route("/orders")
 def orders():
     if "farmer_id" not in session:
@@ -522,7 +535,6 @@ def orders():
     )
 
 
-
 # ---------------- LOGOUT ----------------
 
 @app.route("/logout")
@@ -532,10 +544,10 @@ def logout():
     return redirect(url_for("home"))
 
 
-# ---------------- RUN APPLICATION ----------------
-if __name__ == "__main__":
-    create_tables()
+# ---------------- RUN APPLICATION (LOCAL ONLY) ----------------
+# On Render, gunicorn runs "app:app" and this block is skipped.
 
+if __name__ == "__main__":
     from werkzeug.serving import make_server
 
     server = make_server("127.0.0.1", 0, app)
@@ -543,4 +555,3 @@ if __name__ == "__main__":
     print("Khat Seva is running at http://127.0.0.1:" + str(server.server_port))
 
     server.serve_forever()
-    
