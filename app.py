@@ -533,14 +533,14 @@ def logout():
 
 
 # ---------------- RUN APPLICATION ----------------
-
 if __name__ == "__main__":
     create_tables()
 
     from werkzeug.serving import make_server
-    import socket
 
     server = make_server("127.0.0.1", 0, app)
+
     print("Khat Seva is running at http://127.0.0.1:" + str(server.server_port))
 
     server.serve_forever()
+    
